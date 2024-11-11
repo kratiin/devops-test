@@ -1,0 +1,16 @@
+# .gitlab-ci.yml
+stages:
+  - build
+  - deploy
+
+build:
+  stage: build
+  script:
+    - docker build -t your-dockerhub-username/sample-app:$CI_COMMIT_SHA .
+    - docker push your-dockerhub-username/sample-app:$CI_COMMIT_SHA
+
+deploy:
+  stage: deploy
+  script:
+    - kubectl apply -k kustomize/
+    - argocd app sync sample-app
